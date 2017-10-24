@@ -5,6 +5,7 @@ module.exports = function(app, sqlConnection)
     var mapController = require('./controllers/MapController')(app, sqlConnection);
     var errorController = require('./controllers/ErrorController')(app, sqlConnection);
     var createContentController = require('./controllers/CreateContentController')(app, sqlConnection);
-    var contentListController = require('./controllers/ContentListController')(app, sqlConnection);    
+    var contentListController = require('./controllers/ContentListController')(app, sqlConnection);
+    var contentController = require('./controllers/ContentController')(app, sqlConnection);
 }
 

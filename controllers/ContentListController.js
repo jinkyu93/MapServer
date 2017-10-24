@@ -15,7 +15,9 @@ module.exports = function(app, sqlConnection)
 			
 			response.render('ContentListPage.ejs', {
 				user : request.session.USER,
-				contents : rows
+				contents : rows,
+				page : request.query.page,
+				pageRange : request.session.PAGERANGE
 			});
 			console.log('/contentListPage');
 		}

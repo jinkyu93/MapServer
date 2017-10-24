@@ -29,27 +29,30 @@ function loadContentsCount() {
 function loadContestsCountAction(err, rows){
 	if(err) return;
 
-	console.log("count : " + rows[0].count);
+	console.log("contentsCount : " + rows[0].count);
 	
 	loadContents(rows[0].count);
 }
 
 function loadContents(contentsCount) {
-	var pageRange = (contentsCount / maxContentsLength);
+	var pageRange = parseInt(contentsCount / maxContentsLength);
 	if(contentsCount % maxContentsLength != 0){
 		pageRange = pageRange + 1;
 	}
 
-	if(request.query.page > pageRange){
-		console.log("page : " + page + ", pageRange : " + pageRange);
-				
-		request.session.ERRORMESSAGE = "out of page range";
-		response.redirect('/errorPage');
-		return;
+	request.session.PAGERANGE = pageRange;
+		
+	if(request.query.page < 1){				
+		request.query.page = 1;
+		page = request.query.page - 1;
+	}
+	else if(request.query.page > pageRange){
+		request.query.page = pageRange;
+		page = request.query.page - 1;
 	}
 
 	var startLimitNumber = maxContentsLength * page;
-	console.log("maxContentsLength : " + maxContentsLength + ", page : " + page);
+	console.log("startLimitNumber : " + startLimitNumber + ", page : " + page);
 	
 	var selectQuary = "select " + 
 	"content_idx, user_id, title, lat, lng, datetime " +
@@ -57,7 +60,6 @@ function loadContents(contentsCount) {
 	"order by datetime desc " + 
 	"limit " + startLimitNumber + "," + maxContentsLength;
 
-	console.log(selectQuary);
 	sqlConnection.query(selectQuary, (err, rows) => {
 		loadContentsAction(err, rows);
 	});

@@ -69,7 +69,7 @@
 					alert('aaaa');
 				}, c);
 				*/
-				var popupContent = $("<div>").html('<a href="./logoutAction">' + title + '</a><br>' + " " + user_id + " " + date);
+				var popupContent = $("<div>").html('<a href="./contentPage' + '?idx=' + content_idx + '">' + title + '</a><br>' + " " + user_id + " " + date);
 				//var popupContent = L.popup().setContent(title + " " + user_id + " " + date);
 				var marker = L.marker(L.latLng(lat, lng)).addTo(map);
 				marker.bindPopup(popupContent[0]);

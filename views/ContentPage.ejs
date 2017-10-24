@@ -1,0 +1,82 @@
+<HTML>
+	<HEAD>
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css">
+		<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.js"></script>	
+	
+		<link href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" rel="stylesheet">
+		<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+		<TITLE>ContentPage</TITLE>
+	</HEAD>
+	
+	<BODY>
+		<div class="ui sidebar vertical menu">
+			<a id="userId" class="item"><%= user.id %></a>
+			<a class="item" href="./logOutAction">log-out</a>
+			<a class="item" href="./mapPage">map</a>
+			<a class="item" href="./contentListPage">contents</a>
+		</div>
+		<div class="pusher">
+			<a id="show-sidebar">
+				<i class="content icon"></i>
+			</a>  
+			<form id="contentForm" action="http://127.0.0.1:21002/contentListPage" method="get">						
+				<div class="ui segment" style="left : 5%; top : 5%; width : 90%; height : 90%;">
+					<div class="ui form">	
+						<div class="field">
+							<label>Title</label>
+							<label type="text"> <%= content.title %> </label>
+						</div>
+						<div class="ui inverted divider"></div>
+						
+						<div class="field">
+							<label>Date</label>
+							<label type="text"> 
+								<% var datetime = new Date(content.datetime); %> 
+								<% var date = 
+									datetime.getFullYear() + "-" + 
+									datetime.getMonth() + "-" + 
+									datetime.getDate(); %>
+								<%= date %>
+							</label>
+						</div>
+						<div class="ui inverted divider"></div>
+
+						<div class="field">
+							<label>LatLng</label>
+							<label type="text"> 
+								Lat : <%= content.lat %> <br>
+								Lng : <%= content.lng %>
+							</label>
+						</div>
+						<div class="ui inverted divider"></div>
+						
+						<div class="field">
+							<label>Content</label>
+							<label style="width : 100%; height : 50%;"> 
+								<%= content.content %> 
+							</label>
+						</div>
+
+						<input type="button" class="ui secondary button" style="width : 30%;" value="Edit" onclick="onEditClick();">	
+						<input type="button" class="ui button" style="width : 30%;" value="Back" onclick="onBackClick();">	
+					</div>
+				</div>
+			</form>		
+		</div>
+
+		<script type="text/javascript">
+			$('#show-sidebar').click(function(){
+				$('.ui.sidebar').sidebar('toggle');
+			});
+
+			function onBackClick(){
+				history.back();
+			}
+
+			function onEditClick(){
+				
+			}
+		</script>
+	</BODY>
+</HTML>
