@@ -21,80 +21,86 @@
 				<i class="content icon"></i>
 			</a>  
 			<div id="contentList">
-				<table class="ui celled table">
-					<thead>
-						<tr>
-							<th width="10%">idx</th>
-							<th width="30%">Title</th>
-							<th width="20%">UserID</th>
-							<th width="10%">Lat</th>
-							<th width="10%">Lng</th>
-							<th width="20%">Date</th>
-						</tr>
-					</thead>
-					<tbody>
-						<% if(contents.length > 0) { %>
-							<% for(var i = 0; i < contents.length; i++) { %>
-								<tr onclick="onContentClick(this)">
-									<td> <%= contents[i].content_idx %> </td>										
-									<td> <%= contents[i].title %> </td>
-									<td> <%= contents[i].user_id %> </td>
-									<td> <%= (contents[i].lat).toFixed(3) %> </td>
-									<td> <%= (contents[i].lng).toFixed(3) %> </td>
-									<td> 
-										<% var datetime = new Date(contents[i].datetime); %> 
-										<% var date = 
-											datetime.getFullYear() + "-" + 
-											datetime.getMonth() + "-" + 
-											datetime.getDate(); %>
-										<%= date %> 
-									</td>
-								</tr>
-							<% } %>
-						<% } %>
-					</tbody>
-					<tfoot>
-						<tr>
-							<th colspan="6">
-								<div class="ui right floated pagination menu">
-									<a class="icon item" href="/contentListPage?page=1">
-										<i class="double left angle icon"></i>
-									</a>
-									<a class="icon item" href="/contentListPage?page=<%= page-1 %>">
-										<i class="left angle icon"></i>
-									</a>
-									<!-- active된 페이지가 중앙에 올 수 있도록 변경하기 -->
-									
-									<% if(parseInt(pageRange/5) > parseInt((page-1)/5)) { %>
-										<% for(var i = 1 + parseInt((page-1)/5)*5; i < 6 + parseInt((page-1)/5)*5; i++) { %>
-											<% if(i == page) { %>
-												<a class="active item"> <%= i %> </a>
-											<% } else { %>
-												<a class="item" href="/contentListPage?page=<%= i %>"> <%= i %> </a>
-											<% } %>
-										<% } %>
-									<% } else { %>
-										<% for(var i = 1 + parseInt((page-1)/5)*5; i < pageRange + 1; i++) { %>
-											<% if(i == page) { %>
-												<a class="active item"> <%= i %> </a>
-											<% } else { %>
-												<a class="item" href="/contentListPage?page=<%= i %>"> <%= i %> </a>
-											<% } %>
+				<div class="ui segment" style="left : 5%; top : 5%; width : 90%; height : 90%;">
+					<div class="ui form">	
+						<div class="field">
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th width="10%">idx</th>
+										<th width="30%">Title</th>
+										<th width="20%">UserID</th>
+										<th width="10%">Lat</th>
+										<th width="10%">Lng</th>
+										<th width="20%">Date</th>
+									</tr>
+								</thead>
+								<tbody>
+									<% if(contents.length > 0) { %>
+										<% for(var i = 0; i < contents.length; i++) { %>
+											<tr onclick="onContentClick(this)">
+												<td> <%= contents[i].content_idx %> </td>										
+												<td> <%= contents[i].title %> </td>
+												<td> <%= contents[i].user_id %> </td>
+												<td> <%= (contents[i].lat).toFixed(3) %> </td>
+												<td> <%= (contents[i].lng).toFixed(3) %> </td>
+												<td> 
+													<% var datetime = new Date(contents[i].datetime); %> 
+													<% var date = 
+														datetime.getFullYear() + "-" + 
+														datetime.getMonth() + "-" + 
+														datetime.getDate(); %>
+													<%= date %> 
+												</td>
+											</tr>
 										<% } %>
 									<% } %>
-									<% var nextPage = page*1 + 1 %>
-									<% console.log("ejs page : " + nextPage + ", ejs pageRange : " + pageRange); %>
-									<a class="icon item" href="/contentListPage?page=<%= nextPage %>">
-										<i class="right angle icon"></i>
-									</a>
-									<a class="icon item" href="/contentListPage?page=<%= pageRange %>">
-										<i class="double right angle icon"></i>
-									</a>
-								</div>
-							</th>
-						</tr>
-					</tfoot>
-				</table>
+								</tbody>
+								<tfoot>
+									<tr>
+										<th colspan="6">
+											<div class="ui right floated pagination menu">
+												<a class="icon item" href="/contentListPage?page=1">
+													<i class="double left angle icon"></i>
+												</a>
+												<a class="icon item" href="/contentListPage?page=<%= page-1 %>">
+													<i class="left angle icon"></i>
+												</a>
+												<!-- active된 페이지가 중앙에 올 수 있도록 변경하기 -->
+												
+												<% if(parseInt(pageRange/5) > parseInt((page-1)/5)) { %>
+													<% for(var i = 1 + parseInt((page-1)/5)*5; i < 6 + parseInt((page-1)/5)*5; i++) { %>
+														<% if(i == page) { %>
+															<a class="active item"> <%= i %> </a>
+														<% } else { %>
+															<a class="item" href="/contentListPage?page=<%= i %>"> <%= i %> </a>
+														<% } %>
+													<% } %>
+												<% } else { %>
+													<% for(var i = 1 + parseInt((page-1)/5)*5; i < pageRange + 1; i++) { %>
+														<% if(i == page) { %>
+															<a class="active item"> <%= i %> </a>
+														<% } else { %>
+															<a class="item" href="/contentListPage?page=<%= i %>"> <%= i %> </a>
+														<% } %>
+													<% } %>
+												<% } %>
+												<% var nextPage = page*1 + 1 %>
+												<% console.log("ejs page : " + nextPage + ", ejs pageRange : " + pageRange); %>
+												<a class="icon item" href="/contentListPage?page=<%= nextPage %>">
+													<i class="right angle icon"></i>
+												</a>
+												<a class="icon item" href="/contentListPage?page=<%= pageRange %>">
+													<i class="double right angle icon"></i>
+												</a>
+											</div>
+										</th>
+									</tr>
+								</tfoot>
+							</table>
+						</div>
+					</div>
+				</div>
 			</div>			
 		</div>
 
