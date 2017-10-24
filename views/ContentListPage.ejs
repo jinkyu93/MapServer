@@ -1,0 +1,111 @@
+<HTML>
+	<HEAD>
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css">
+		<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.js"></script>	
+	
+		<link href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" rel="stylesheet">
+		<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+		<TITLE>MapPage</TITLE>
+	</HEAD>
+	
+	<BODY>
+		<div class="ui sidebar vertical menu">
+			<a id="userId" class="item"><%= user.id %></a>
+			<a class="item" href="./logOutAction">log-out</a>
+			<a class="item" href="./mapPage">map</a>
+			<a class="item" href="./contentListPage">contents</a>
+		</div>
+		<div class="pusher">
+			<a id="show-sidebar">
+				<i class="content icon"></i>
+			</a>  
+			<div id="contentList">
+				<table class="ui celled table">
+					<thead>
+						<tr>
+							<th width="10%">idx</th>
+							<th width="30%">Title</th>
+							<th width="20%">UserID</th>
+							<th width="10%">Lat</th>
+							<th width="10%">Lng</th>
+							<th width="20%">Date</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% if(contents.length > 0) { %>
+							<% for(var i = 0; i < contents.length; i++) { %>
+								<tr>
+									<td> <%= contents[i].content_idx %> </td>										
+									<td> <%= contents[i].title %> </td>
+									<td> <%= contents[i].user_id %> </td>
+									<td> <%= (contents[i].lat).toFixed(3) %> </td>
+									<td> <%= (contents[i].lng).toFixed(3) %> </td>
+									<td> 
+										<% var datetime = new Date(contents[i].datetime); %> 
+										<% var date = 
+											datetime.getFullYear() + "-" + 
+											datetime.getMonth() + "-" + 
+											datetime.getDate(); %>
+										<%= date %> 
+									</td>
+								</tr>
+							<% } %>
+						<% } %>
+					</tbody>
+					<tfoot>
+						<tr>
+							<th colspan="6">
+								<div class="ui right floated pagination menu">
+									<a class="icon item">
+										<i class="left chevron icon"></i>
+									</a>
+									<a class="item">1</a>
+									<a class="item">2</a>
+									<a class="item">3</a>
+									<a class="item">4</a>
+									<a class="icon item">
+										<i class="right chevron icon"></i>
+									</a>
+								</div>
+							</th>
+						</tr>
+					</tfoot>
+				</table>
+			</div>			
+		</div>
+
+		<!--
+		<form id="popForm">
+			<input type="hidden" id="id" name="id"/>
+			<input type="hidden" id="lat" name="lat"/>
+			<input type="hidden" id="lng" name="lng"/>
+		</form>
+		-->
+
+		<script type="text/javascript">
+			$('#show-sidebar').click(function(){
+				$('.ui.sidebar').sidebar('toggle');
+			});
+			
+			/*
+
+			//alert(rows.length);
+			
+			for(var i = 0; i < rows.length; i++){
+				var content_idx = rows[i].content_idx;
+				var user_id = rows[i].user_id;
+				var title = rows[i].title;
+				var content = rows[i].content;
+				var lat = rows[i].lat;
+				var lng = rows[i].lng;
+				var datetime = new Date(rows[i].datetime);
+				var date = datetime.getFullYear() + "-" + datetime.getMonth() + "-" + datetime.getDate();
+
+
+			}
+			*/
+
+		</script>
+	</BODY>
+</HTML>

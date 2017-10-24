@@ -1,0 +1,99 @@
+<HTML>
+	<HEAD>
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css">
+		<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.js"></script>	
+	
+		<link href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" rel="stylesheet">
+		<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+		<TITLE>MapPage</TITLE>
+	</HEAD>
+	
+	<BODY>
+		<div class="ui sidebar vertical menu">
+			<a id="userId" class="item"><%= user.id %></a>
+			<a class="item" href="./logOutAction">log-out</a>
+			<a class="item" href="./mapPage">map</a>
+			<a class="item" href="./contentListPage">contents</a>
+		</div>
+		<div class="pusher">
+			<a id="show-sidebar">
+				<i class="content icon"></i>
+			</a>  
+			<div id="map" style="left : 5%; top : 5%; width : 90%; height : 90%;"></div>			
+		</div>
+
+		<form id="popForm">
+			<input type="hidden" id="id" name="id"/>
+			<input type="hidden" id="lat" name="lat"/>
+			<input type="hidden" id="lng" name="lng"/>
+		</form>
+
+		<script type="text/javascript">
+			$('#show-sidebar').click(function(){
+				$('.ui.sidebar').sidebar('toggle');
+			});
+
+			// 기본 뷰 대한민국
+			var map = L.map('map').setView([36.5, 127.5], 7);
+
+			// 범위 지정 -- 안하면 지도가 반복적으로 나오지만 지도마다 좌표가 다르다
+			var boundStart = L.latLng(-90, -180);
+			var boundEnd = L.latLng(90, 180);
+			var myBounds = L.latLngBounds(boundStart, boundEnd);
+			
+			map.setMaxBounds(myBounds);
+
+			L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+				attribution : '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+				bounds : myBounds,
+				minZoom : 1
+			}).addTo(map);
+
+			var rows = JSON.parse('<%- JSON.stringify(contents) %>');
+						
+			for(var i = 0; i < rows.length; i++){
+				var content_idx = rows[i].content_idx;
+				var user_id = rows[i].user_id;
+				var title = rows[i].title;
+				var content = rows[i].content;
+				var lat = rows[i].lat;
+				var lng = rows[i].lng;
+				var datetime = new Date(rows[i].datetime);
+				var date = datetime.getFullYear() + "-" + datetime.getMonth() + "-" + datetime.getDate();
+				
+				/*
+				var c = L.DomUtil.create('button', 'content');
+				var popupContent = L.popup().setContent(title + " " + user_id + " " + date);
+				L.DomEvent.addListener(c, 'click', function(event){
+					alert('aaaa');
+				}, c);
+				*/
+				var popupContent = $("<div>").html('<a href="./logoutAction">' + title + '</a><br>' + " " + user_id + " " + date);
+				//var popupContent = L.popup().setContent(title + " " + user_id + " " + date);
+				var marker = L.marker(L.latLng(lat, lng)).addTo(map);
+				marker.bindPopup(popupContent[0]);
+			}
+			
+			
+			function onMapClick(e){
+				var form = document.getElementById("popForm");
+				var userId = document.getElementById("userId");
+
+				form.id.value = userId.innerText;
+				form.lat.value = e.latlng.lat;
+				form.lng.value = e.latlng.lng;
+
+				var url="createNewPostPopup";
+				var popupWindow = window.open(url,"CreateNewPost","width=400, height=400");
+
+				// --- 부모에서 자식팝업으로 데이터를 보낼 경우 가지 않는 경우가 가끔 발생
+				//popup.document.getElementById("id").value = userId.innerText;
+				//popup.document.getElementById("lat").value = e.latlng.lat;
+				//popup.document.getElementById("lng").value = e.latlng.lng;
+			}
+			map.on('click', onMapClick);
+
+		</script>
+	</BODY>
+</HTML>

@@ -1,0 +1,22 @@
+<HTML>
+	<HEAD>
+		<link href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" rel="stylesheet">
+		<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+	</HEAD>
+	
+	<BODY>
+		<div id="map" style="width: 100%; height: 100%;"></div>
+	</BODY>
+</HTML>
+
+<script defer="" type="text/javascript">
+	var map;
+	map = L.map('map').setView([36.5, 127.5], 7); 
+	map.attributionControl.setPrefix('');
+	var layer = new L.TileLayer('http://xdworld.vworld.kr:8080/2d/Base/201411/{z}/{x}/{y}.png', { 
+		attribution : '© Vworld', 
+		minZoom : 1, 
+		maxZoom : 19 
+	}).addTo(map);
+
+</script>

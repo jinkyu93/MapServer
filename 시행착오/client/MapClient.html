@@ -1,0 +1,40 @@
+﻿<HTML>
+	<HEAD>
+		<link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
+		<script
+			src="https://code.jquery.com/jquery-3.1.1.min.js"
+			integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+			crossorigin="anonymous"></script>
+		<script src="semantic/dist/semantic.min.js"></script>
+	</HEAD>
+	
+	<BODY>
+		<div class="ui email alternate stripe vertical segment">
+			<div class="ui center aligned grid container">
+				<div class="column">
+					
+					<form class="ui form" action="http://127.0.0.1:21002/login" method="post">
+						<div class="field">	
+							<div class="ui huge input">
+								<input type="text" placeholder="input your id" name="id">
+							</div>	
+							<div class="ui huge input">
+								<input type="text" placeholder="input your pw" name="pw">
+							</div>	
+							<button type="submit" style="width: 30%;" class="ui huge secondary submit button">
+								login
+							</button>
+							
+							<form class="ui form" action="http://127.0.0.1:21002/sign" method="post">
+								<button type="submit" style="width: 30%;" class="ui huge secondary submit button">
+									sign-up
+								</button>
+							</form>	
+						</div>
+					</form>
+					
+				</div>
+			</div>
+		</div>
+	</BODY>
+</HTML>
