@@ -15,7 +15,6 @@ exports.render = function(req, res, sqlConn)
 	console.log('/contentListActionModel');				
 	
 	////////////// ------------- callback -------------- 나는 콜백을 몰라 나는 콜백을 몰라 그래서 코드가 이따구야~
-	
 	loadContentsCount(); 
 }
 
