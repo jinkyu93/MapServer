@@ -3,19 +3,23 @@ var bodyParser = require('body-parser');
 var express = require('express');
 var mysql = require('mysql');
 var session = require('express-session');
+var jsonFile = require('jsonFile');
+
+// --- setting 불러오기
+var fileName = './setting.json';
+var settingData = jsonFile.readFileSync(fileName);
 
 // --- ip 설정
-var hostName = '127.0.0.1'; 
-var sqlPort = '3306';
-var serverPort = '21002';
+var hostName = settingData[0].hostName;
+var serverPort = settingData[0].serverPort;
 
 // --- mysql설정
 var mySqlConnection = mysql.createConnection({
-	host:hostName,
-	port:sqlPort,
-	database:'mapdb',
-	user:'mapuser',
-	password:'jkjkiii'
+	host : hostName,
+	port : settingData[0].sqlPort,
+	database : settingData[0].database,
+	user : settingData[0].user,
+	password : settingData[0].password
 });
 
 mySqlConnection.connect(err => {
@@ -46,8 +50,6 @@ app.use(function(request, response, next){
 });
 
 // --- 라우터 설정
-//var router = require('./controllers/Router')(app, mySqlConnection);
-
 var router = require('./Index')(app, mySqlConnection);
 
 // --- 서버 실행

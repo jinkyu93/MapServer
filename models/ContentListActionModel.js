@@ -9,7 +9,7 @@ exports.render = function(req, res, sqlConn)
 	sqlConnection = sqlConn;
 	request = req;
 	response = res;
-	maxContentsLength = 2;
+	maxContentsLength = 5;
 	page = request.query.page - 1;
 
 	console.log('/contentListActionModel');				
@@ -19,7 +19,7 @@ exports.render = function(req, res, sqlConn)
 }
 
 function loadContentsCount() {
-	var countQuary = "select count(*) as count from contents";
+	var countQuary = 'select * from counts where what_count="contents_count"';
 
 	sqlConnection.query(countQuary, (err, rows) => {
 		loadContestsCountAction(err, rows);

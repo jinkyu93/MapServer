@@ -34,7 +34,7 @@ function createContent() {
 	console.log("lat : " + lat);
 	console.log("lng : " + lng);
 	
-	var values = [[id, title, content, lat, lng, datetime]];
+	var values = [ [id, title, content, lat, lng, datetime] ];
 
 	sqlConnection.query(sqlQuary, [values], (err, result) => {
 		createContentAction(err, result);
@@ -48,4 +48,25 @@ function createContentAction(err, result){
 	if(result.affectedRows){
 		console.log("insert success");
 	}
+
+	updateContentCount();
+}
+
+function updateContentCount(){
+	var sqlQuary = 'update counts set count=count+1 where what_count="contents_count";';
+	
+	sqlConnection.query(sqlQuary, (err, result) => {
+		updateContentCountAction(err, result);
+	});
+}
+
+function updateContentCountAction(err, result){
+	if(err) {
+		throw new Error(err);
+	}
+	if(result.affectedRows){
+		console.log("insert success");
+	}
+
+	response.redirect('/closePopup');	
 }

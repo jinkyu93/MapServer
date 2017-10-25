@@ -38,7 +38,7 @@
 								<tbody>
 									<% if(contents.length > 0) { %>
 										<% for(var i = 0; i < contents.length; i++) { %>
-											<tr onclick="onContentClick(this)">
+											<tr onclick="onContentClick(this)" onmouseover="onContentMouseOver(this)" onmouseout="onContentMouseOut(this)">
 												<td> <%= contents[i].content_idx %> </td>										
 												<td> <%= contents[i].title %> </td>
 												<td> <%= contents[i].user_id %> </td>
@@ -48,7 +48,7 @@
 													<% var datetime = new Date(contents[i].datetime); %> 
 													<% var date = 
 														datetime.getFullYear() + "-" + 
-														datetime.getMonth() + "-" + 
+														(datetime.getMonth()*1 + 1) + "-" + 
 														datetime.getDate(); %>
 													<%= date %> 
 												</td>
@@ -120,6 +120,12 @@
 			function onContentClick(trObj){
 				var idx = trObj.cells[0].innerText;
 				location.href = "/contentPage" + "?idx=" + idx;
+			}
+			function onContentMouseOver(trObj){
+				trObj.bgColor = "lightgray";
+			}
+			function onContentMouseOut(trObj){
+				trObj.bgColor = "white";
 			}
 		</script>
 	</BODY>

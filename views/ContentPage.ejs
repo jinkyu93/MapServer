@@ -34,7 +34,7 @@
 							<% var datetime = new Date(content.datetime); %> 
 							<% var date = 
 								datetime.getFullYear() + "-" + 
-								datetime.getMonth() + "-" + 
+								(datetime.getMonth()*1 + 1) + "-" + 
 								datetime.getDate(); %>
 							<%= date %>
 						</label>

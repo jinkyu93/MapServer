@@ -12,7 +12,7 @@
 	<BODY>
 		<div class="ui sidebar vertical menu">
 			<a id="userId" class="item"><%= user.id %></a>
-			<a class="item" href="./logOutAction">log-out</a>
+			<a id="logout" class="item" href="./logOutAction">log-out</a>
 			<a class="item" href="./mapPage">map</a>
 			<a class="item" href="./contentListPage">contents</a>
 		</div>
@@ -38,6 +38,7 @@
 			var map = L.map('map').setView([36.5, 127.5], 7);
 
 			// 범위 지정 -- 안하면 지도가 반복적으로 나오지만 지도마다 좌표가 다르다
+			
 			var boundStart = L.latLng(-90, -180);
 			var boundEnd = L.latLng(90, 180);
 			var myBounds = L.latLngBounds(boundStart, boundEnd);
@@ -60,8 +61,10 @@
 				var lat = rows[i].lat;
 				var lng = rows[i].lng;
 				var datetime = new Date(rows[i].datetime);
-				var date = datetime.getFullYear() + "-" + datetime.getMonth() + "-" + datetime.getDate();
+				// ----- month만 0~11 까지로 이루어져있기 때문에 + 1 해줌
+				var date = datetime.getFullYear() + "-" + (datetime.getMonth()*1 + 1) + "-" + datetime.getDate();
 				
+
 				/*
 				var c = L.DomUtil.create('button', 'content');
 				var popupContent = L.popup().setContent(title + " " + user_id + " " + date);
@@ -79,8 +82,9 @@
 			function onMapClick(e){
 				var form = document.getElementById("popForm");
 				var userId = document.getElementById("userId");
+				var logout = document.getElementById("logout");
 
-				form.id.value = userId.innerText;
+				form.id.value = userId.innerHTML;
 				form.lat.value = e.latlng.lat;
 				form.lng.value = e.latlng.lng;
 
