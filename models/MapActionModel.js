@@ -42,7 +42,3 @@ function loadContentsAction(err, rows){
 	
 	response.redirect('/mapPage');	
 }
-
-function callback(err){
-	if(err) throw new Error(err);
-}

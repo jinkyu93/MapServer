@@ -1,3 +1,5 @@
+var async = require("async");
+
 var sqlConnection;
 var request;
 var response;
@@ -15,10 +17,24 @@ exports.render = function(req, res, sqlConn)
 		return;
 	}
 
-	createContent();
+	async.waterfall(
+		[
+			function(callback){
+				createContent(callback);
+			},
+			function(isSuccess, callback){
+				if(isSuccess){
+					updateContentCount(callback);					
+				}
+			},
+			function(err){
+				if(err) console.log(err);
+			}
+		]
+	);
 }
 
-function createContent() {
+function createContent(callback) {
 	var sqlQuary = "insert into contents(user_id, title, content, lat, lng, datetime) values ?";
 
 	var id = request.body.id;
@@ -37,35 +53,35 @@ function createContent() {
 	var values = [ [id, title, content, lat, lng, datetime] ];
 
 	sqlConnection.query(sqlQuary, [values], (err, result) => {
-		createContentAction(err, result);
+		createContentAction(err, result, callback);
 	});
 }
 
-function createContentAction(err, result){
+function createContentAction(err, result, callback){
 	if(err) {
 		throw new Error(err);
 	}
 	if(result.affectedRows){
 		console.log("insert success");
+		callback(null, true);
 	}
-
-	updateContentCount();
 }
 
-function updateContentCount(){
+function updateContentCount(callback){
 	var sqlQuary = 'update counts set count=count+1 where what_count="contents_count";';
 	
 	sqlConnection.query(sqlQuary, (err, result) => {
-		updateContentCountAction(err, result);
+		updateContentCountAction(err, result, callback);
 	});
 }
 
-function updateContentCountAction(err, result){
+function updateContentCountAction(err, result, callback){
 	if(err) {
 		throw new Error(err);
 	}
 	if(result.affectedRows){
 		console.log("insert success");
+		callback(null);
 	}
 
 	response.redirect('/closePopup');	

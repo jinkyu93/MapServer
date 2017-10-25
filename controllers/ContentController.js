@@ -20,6 +20,7 @@ module.exports = function(app, sqlConnection)
 			response.redirect('/contentAction' + '?idx=' + request.query.idx);
 		}
 	});
+	
 	app.get('/contentAction', function(request, response){
 		if(request.session.USER){
 			var model = require('../models/ContentActionModel.js');

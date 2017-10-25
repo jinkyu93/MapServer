@@ -7,10 +7,11 @@ module.exports = function(app, sqlConnection)
 			response.redirect('/mapAction');
 		}
 		else{
-			response.render('SignUpPage.html');
+			response.render('SignUpPage.ejs');
 			console.log('/signUpPage');
 		}
 	});
+	
 	app.post('/signUpAction', function(request, response){	
 		var model = require('../models/SignUpActionModel.js');	
 		model.render(request, response, sqlConnection);

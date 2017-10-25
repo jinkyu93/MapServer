@@ -32,7 +32,3 @@ function loadContentAction(err, rows){
 	
 	response.redirect('/contentPage' + '?idx=' + request.query.idx);		
 }
-
-function callback(err){
-	if(err) throw new Error(err);
-}

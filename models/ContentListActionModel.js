@@ -1,3 +1,5 @@
+var async = require("async");
+
 var sqlConnection;
 var request;
 var response;
@@ -14,27 +16,34 @@ exports.render = function(req, res, sqlConn)
 
 	console.log('/contentListActionModel');				
 	
-	////////////// ------------- callback -------------- 나는 콜백을 몰라 나는 콜백을 몰라 그래서 코드가 이따구야~
-	loadContentsCount(); 
+	async.waterfall(
+		[
+			function(callback){
+				loadContentsCount(callback);
+			},
+			function(count, callback){
+				loadContents(count, callback);
+			},
+			function(err){
+				if(err) console.log(err);
+			}
+		]
+	);
 }
 
-function loadContentsCount() {
+function loadContentsCount(callback) {
 	var countQuary = 'select * from counts where what_count="contents_count"';
-
+		
 	sqlConnection.query(countQuary, (err, rows) => {
-		loadContestsCountAction(err, rows);
+		if(err) {
+			callback(err);
+			return;
+		}
+		callback(null, rows[0].count);
 	});
 }
 
-function loadContestsCountAction(err, rows){
-	if(err) return;
-
-	console.log("contentsCount : " + rows[0].count);
-	
-	loadContents(rows[0].count);
-}
-
-function loadContents(contentsCount) {
+function loadContents(contentsCount, callback) {
 	var pageRange = parseInt(contentsCount / maxContentsLength);
 	if(contentsCount % maxContentsLength != 0){
 		pageRange = pageRange + 1;
@@ -62,11 +71,11 @@ function loadContents(contentsCount) {
 
 	sqlConnection.query(selectQuary, (err, rows) => {
 		loadContentsAction(err, rows);
+		callback(null);		
 	});
-
 }
 
-function loadContentsAction(err, rows){
+function loadContentsAction(err, rows) {
 	if(err) return;
 	
 	/*
@@ -83,10 +92,6 @@ function loadContentsAction(err, rows){
 	*/
 
 	request.session.CONTENTS = rows;
-	
-	response.redirect('/contentListPage' + '?page=' + request.query.page);	
-}
 
-function callback(err){
-	if(err) throw new Error(err);
+	response.redirect('/contentListPage' + '?page=' + request.query.page);
 }

@@ -28,6 +28,7 @@ module.exports = function(app, sqlConnection)
 			response.redirect('/contentListAction' + '?page=' + request.query.page);
 		}
 	});
+	
 	app.get('/contentListAction', function(request, response){
 		if(request.session.USER){
 			var model = require('../models/ContentListActionModel.js');

@@ -47,8 +47,20 @@
 				window.close();
 			}
 			function onSaveClick(){	
+				var regExp = /[`\'\"]/;
+				//var regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/;
+
+
 				if(form.title.value == ""){
 					alert("title is empty");
+					return;
+				}
+				else if(regExp.test(form.title.value)){
+					alert("can't use special character");
+					return;
+				}
+				else if(regExp.test(form.content.value)){
+					alert("can't use special character");
 					return;
 				}
 				
