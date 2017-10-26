@@ -38,8 +38,8 @@
 			var map = L.map('map').setView([36.5, 127.5], 7);
 
 			// 범위 지정 -- 안하면 지도가 반복적으로 나오지만 지도마다 좌표가 다르다
-			var boundStart = L.latLng(-90, -180);
-			var boundEnd = L.latLng(90, 180);
+			var boundStart = L.latLng(-85, -180);
+			var boundEnd = L.latLng(85, 180);
 			var myBounds = L.latLngBounds(boundStart, boundEnd);
 			
 			map.setMaxBounds(myBounds);
@@ -79,6 +79,14 @@
 			
 			
 			function onMapClick(e){
+				var lat = e.latlng.lat;
+				var lng = e.latlng.lng;
+				
+				if( lat > 85 || lat < -85 || lng > 180 || lng < -180 ){
+					alert("out of map");
+					return;
+				}
+
 				var form = document.getElementById("popForm");
 				var userId = document.getElementById("userId");
 				var logout = document.getElementById("logout");
