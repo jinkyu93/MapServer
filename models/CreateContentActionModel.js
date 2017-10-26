@@ -10,12 +10,6 @@ exports.render = function(req, res, sqlConn)
 	request = req;
 	response = res;
 	console.log("/createContentAction");
-	
-	// --- id, lat, lng 값이 들어왔는지 확인
-	if(request.body.id == ''){
-		console.log('id, lat, lng is empty');
-		return;
-	}
 
 	async.waterfall(
 		[
@@ -59,7 +53,9 @@ function createContent(callback) {
 
 function createContentAction(err, result, callback){
 	if(err) {
-		throw new Error(err);
+		request.session.ERRORMESSAGE = "create content error";
+		response.redirect('/errorPage');
+		return;
 	}
 	if(result.affectedRows){
 		console.log("insert success");
@@ -77,7 +73,9 @@ function updateContentCount(callback){
 
 function updateContentCountAction(err, result, callback){
 	if(err) {
-		throw new Error(err);
+		request.session.ERRORMESSAGE = "update content count error";
+		response.redirect('/errorPage');
+		return;
 	}
 	if(result.affectedRows){
 		console.log("insert success");

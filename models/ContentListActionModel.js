@@ -36,7 +36,9 @@ function loadContentsCount(callback) {
 		
 	sqlConnection.query(countQuary, (err, rows) => {
 		if(err) {
-			callback(err);
+			request.session.ERRORMESSAGE = "load contents count error";
+			response.redirect('/errorPage');
+			callback(null);
 			return;
 		}
 		callback(null, rows[0].count);
@@ -76,8 +78,11 @@ function loadContents(contentsCount, callback) {
 }
 
 function loadContentsAction(err, rows) {
-	if(err) return;
-	
+	if(err) {
+		request.session.ERRORMESSAGE = "load contents error";
+		response.redirect('/errorPage');
+		return;
+	}	
 	/*
 	for(var i = 0; i < rows.length; i++){
 		console.log("");

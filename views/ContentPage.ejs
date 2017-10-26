@@ -23,12 +23,19 @@
 			<div class="ui segment" style="left : 5%; top : 5%; width : 90%; height : 800;">
 				<div class="ui form">	
 					<div class="field">
+
+						<form id="contentForm" action="http://127.0.0.1:21002/editContentPage" method="post">						
+							<input type="hidden" name="json" value="<%= JSON.stringify(content) %>">
+						</form>
+
 						<label>Title</label>
-						<label type="text"> <%= content.title %> </label>
+						<label name="title" type="text"> <%= content.title %> </label>
 					</div>
+					<div class="ui inverted divider"></div>
+					
 					<div class="field">
 						<label>User</label>
-						<label type="text"> <%= content.user_id %> </label>
+						<label name="user_id" type="text"> <%= content.user_id %> </label>
 					</div>
 					<div class="ui inverted divider"></div>
 					
@@ -75,7 +82,15 @@
 			}
 
 			function onEditClick(){
+				var form = document.getElementById("contentForm");
+				var userId = document.getElementById("userId");
 				
+				if("<%= content.user_id %>" == userId.innerHTML){
+					form.submit();
+				}
+				else{
+					alert("you can't edit this post");
+				}
 			}
 		</script>
 	</BODY>

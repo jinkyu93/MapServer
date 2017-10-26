@@ -1,11 +1,12 @@
 module.exports = function(app, sqlConnection)
 {
-    var loginController = require('./controllers/LoginController')(app, sqlConnection);
-    var signUpController = require('./controllers/SignUpController')(app, sqlConnection);
-    var mapController = require('./controllers/MapController')(app, sqlConnection);
-    var errorController = require('./controllers/ErrorController')(app, sqlConnection);
-    var createContentController = require('./controllers/CreateContentController')(app, sqlConnection);
-    var contentListController = require('./controllers/ContentListController')(app, sqlConnection);
-    var contentController = require('./controllers/ContentController')(app, sqlConnection);
+    var loginPageController = require('./controllers/LoginPageController')(app, sqlConnection);
+    var signUpPageController = require('./controllers/SignUpPageController')(app, sqlConnection);
+    var mapPageController = require('./controllers/MapPageController')(app, sqlConnection);
+    var errorPageController = require('./controllers/ErrorPageController')(app, sqlConnection);
+    var createContentPageController = require('./controllers/CreateContentPageController')(app, sqlConnection);
+    var contentListPageController = require('./controllers/ContentListPageController')(app, sqlConnection);
+    var contentPageController = require('./controllers/ContentPageController')(app, sqlConnection);
+    var editContentPageController = require('./controllers/EditContentPageController')(app, sqlConnection);
 }
 

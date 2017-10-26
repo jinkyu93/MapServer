@@ -1,8 +1,6 @@
 var sqlConnection;
 var request;
 var response;
-var page;
-var maxContentsLength;
 
 exports.render = function(req, res, sqlConn)
 {
@@ -26,8 +24,11 @@ function loadContent() {
 }
 
 function loadContentAction(err, rows){
-	if(err) return;
-
+	if(err) {
+		request.session.ERRORMESSAGE = "load content error";
+		response.redirect('/errorPage');
+		return;
+	}
 	request.session.CONTENT = rows[0];
 	
 	response.redirect('/contentPage' + '?idx=' + request.query.idx);		

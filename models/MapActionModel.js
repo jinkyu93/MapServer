@@ -24,8 +24,11 @@ function loadContents() {
 }
 
 function loadContentsAction(err, rows){
-	if(err) return;
-
+	if(err) {
+		request.session.ERRORMESSAGE = "load contents error";
+		response.redirect('/errorPage');
+		return;
+	}
 	/*
 	for(var i = 0; i < rows.length; i++){
 		console.log("");

@@ -13,6 +13,8 @@ exports.render = function(req, res, sqlConn)
 	// --- body parser로 post 데이터 받기
 	var id = request.body.id;
 	var pw = request.body.pw;
+
+	console.log('/signUpAction');		
 	
 	// --- 오류 검사
 	if(id == ''){
@@ -28,16 +30,14 @@ exports.render = function(req, res, sqlConn)
 		response.redirect('/errorPage');
 	}
 	else{
-		console.log('/signUpAction');		
-		
 		// ----회원 가입 진행
 		async.waterfall(
 			[
 				function(callback){
 					checkUserExist(id, pw, callback);
 				},
-				function(isSuccess, callback){
-					if(isSuccess){
+				function(isExist, callback){
+					if(!isExist){
 						signUpAction(id, pw, callback);					
 					}
 					else{
@@ -59,6 +59,12 @@ function checkUserExist(id, pw, callback){
 					' where `id` = ' + '\'' + id + '\'';
 	
 	sqlConnection.query(sqlQuary, [id], (err, rows) => {
+		if(err) {
+			request.session.ERRORMESSAGE = "check user exist error";
+			response.redirect('/errorPage');
+			return;
+		}
+
 		console.log("rows.length : " + rows.length);		
 		
 		if(rows.length){
@@ -66,10 +72,10 @@ function checkUserExist(id, pw, callback){
 			
 			request.session.ERRORMESSAGE = "id already exist";
 			response.redirect('/errorPage');
-			callback(null, false);			
+			callback(null, true);			
 		}
 		else{
-			callback(null, true);
+			callback(null, false);
 		}
 	});
 }
@@ -80,6 +86,7 @@ function signUpAction(id, pw, callback){
 	sqlConnection.query(sqlQuary, user);
 	
 	console.log('sign up success, new id : ' + id);
+	
 	request.session.USER = user;		
 	response.redirect('/mapPage');
 	callback(null);

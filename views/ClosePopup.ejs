@@ -5,7 +5,12 @@
 	
 	<BODY>
 		<script>
-			window.close();
+			if(window.opener){
+				window.close();
+			}
+			else{
+				location.href = '/contentListPage';
+			}
 		</script>
 	</BODY>
 </HTML>

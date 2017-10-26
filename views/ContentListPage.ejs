@@ -60,7 +60,7 @@
 									<tr>
 										<th colspan="6">
 											<div class="ui left floated pagination menu">
-													<a class="item">CREATE</a>
+													<a class="item" href="/createContentPage">CREATE</a>
 											</div>
 
 											<div class="ui right floated pagination menu">
@@ -90,7 +90,6 @@
 													<% } %>
 												<% } %>
 												<% var nextPage = page*1 + 1 %>
-												<% console.log("ejs page : " + nextPage + ", ejs pageRange : " + pageRange); %>
 												<a class="icon item" href="/contentListPage?page=<%= nextPage %>">
 													<i class="right angle icon"></i>
 												</a>
@@ -125,9 +124,11 @@
 				var idx = trObj.cells[0].innerText;
 				location.href = "/contentPage" + "?idx=" + idx;
 			}
+
 			function onContentMouseOver(trObj){
 				trObj.bgColor = "lightgray";
 			}
+
 			function onContentMouseOut(trObj){
 				trObj.bgColor = "white";
 			}
