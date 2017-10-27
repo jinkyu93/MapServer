@@ -5,6 +5,7 @@ var request;
 var response;
 var page;
 var maxContentsLength;
+var searchText;
 
 exports.render = function(req, res, sqlConn)
 {
@@ -13,9 +14,11 @@ exports.render = function(req, res, sqlConn)
 	response = res;
 	maxContentsLength = 5;
 	page = request.query.page - 1;
+	searchText = request.session.searchText;
 
 	console.log('/contentListActionModel');				
-	
+	console.log(searchText);
+
 	async.waterfall(
 		[
 			function(callback){
@@ -32,20 +35,36 @@ exports.render = function(req, res, sqlConn)
 }
 
 function loadContentsCount(callback) {
-	var countQuary = 'select * from counts where what_count="contents_count"';
-		
+	var countQuary;
+
+	if(searchText == undefined){
+		countQuary = 'select * from counts where what_count="contents_count"';
+	}
+	else{
+		countQuary = 'select count(*) as count from contents where title like "%' + searchText + '%"';
+	}
+
 	sqlConnection.query(countQuary, (err, rows) => {
+		// ----- 이부분을 함수로 추출하면 비동기로 코드가 동작해서 contentCount가 반환이 안됨
 		if(err) {
 			request.session.ERRORMESSAGE = "load contents count error";
 			response.redirect('/errorPage');
 			callback(null);
 			return;
 		}
-		callback(null, rows[0].count);
+		var contentsCount = rows[0].count;
+		console.log("loadContentsCount : " + contentsCount);
+		if(contentsCount == 0){
+			request.session.ERRORMESSAGE = "there is no contents";
+			response.redirect('/errorPage');
+			return;
+		}
+	
+		callback(null, contentsCount);
 	});
 }
 
-function loadContents(contentsCount, callback) {
+function getStartLimitNumber(contentsCount){
 	var pageRange = parseInt(contentsCount / maxContentsLength);
 	if(contentsCount % maxContentsLength != 0){
 		pageRange = pageRange + 1;
@@ -62,27 +81,40 @@ function loadContents(contentsCount, callback) {
 		page = request.query.page - 1;
 	}
 
-	var startLimitNumber = maxContentsLength * page;
+	return (maxContentsLength * page);
+}
+
+function loadContents(contentsCount, callback) {
+	var startLimitNumber = getStartLimitNumber(contentsCount);
 	console.log("startLimitNumber : " + startLimitNumber + ", page : " + page);
 	
+	var sText
+	if(searchText == undefined){
+		sText ="";
+	}
+	else{
+		sText = searchText;
+	}
+
 	var selectQuary = "select " + 
 	"content_idx, user_id, title, lat, lng, datetime " +
 	"from contents " + 
+	"where title like " + '"%' + sText + '%" ' +
 	"order by datetime desc " + 
 	"limit " + startLimitNumber + "," + maxContentsLength;
 
 	sqlConnection.query(selectQuary, (err, rows) => {
-		loadContentsAction(err, rows);
-		callback(null);		
+		loadContentsAction(err, rows, callback);
 	});
 }
 
-function loadContentsAction(err, rows) {
+function loadContentsAction(err, rows, callback) {
 	if(err) {
 		request.session.ERRORMESSAGE = "load contents error";
 		response.redirect('/errorPage');
 		return;
-	}	
+	}
+	console.log("rows.length : " + rows.length);
 	/*
 	for(var i = 0; i < rows.length; i++){
 		console.log("");
@@ -99,4 +131,5 @@ function loadContentsAction(err, rows) {
 	request.session.CONTENTS = rows;
 
 	response.redirect('/contentListPage' + '?page=' + request.query.page);
+	callback(null);			
 }

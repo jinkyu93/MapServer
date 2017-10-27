@@ -8,7 +8,8 @@ module.exports = function(app, sqlConnection)
 		}
 		else if(request.session.CONTENTS){
             if(request.query.page == undefined){
-                request.query.page = '1';
+				request.query.page = '1';
+				delete request.session.searchText;
             }
 			var rows = request.session.CONTENTS;
 			delete request.session.CONTENTS;
@@ -23,7 +24,8 @@ module.exports = function(app, sqlConnection)
 		}
 		else{
             if(request.query.page == undefined){
-                request.query.page = '1';
+				request.query.page = '1';
+				delete request.session.searchText;				
             }
 			response.redirect('/contentListAction' + '?page=' + request.query.page);
 		}
@@ -31,6 +33,10 @@ module.exports = function(app, sqlConnection)
 	
 	app.get('/contentListAction', function(request, response){
 		if(request.session.USER){
+			if(request.query.searchText != undefined){
+				request.session.searchText = request.query.searchText;				
+			}
+			
 			var model = require('../models/ContentListActionModel.js');
 			model.render(request, response, sqlConnection);
 		}

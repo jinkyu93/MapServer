@@ -60,9 +60,12 @@
 									<tr>
 										<th colspan="6">
 											<div class="ui left floated pagination menu">
-													<a class="item" href="/createContentPage">CREATE</a>
+												<a class="item" href="/createContentPage">CREATE</a>
 											</div>
-
+											<div class="ui floated pagination menu">
+												<input id="search" type="text" placeholder="search with title">
+												<a class="item" onclick="onSearchClick()">SEARCH</a>	
+											</div>	
 											<div class="ui right floated pagination menu">
 												<a class="icon item" href="/contentListPage?page=1">
 													<i class="double left angle icon"></i>
@@ -131,6 +134,12 @@
 
 			function onContentMouseOut(trObj){
 				trObj.bgColor = "white";
+			}
+			
+			function onSearchClick(){
+				var searchInput = document.getElementById("search");
+				//alert(searchInput.value);
+				location.href="/contentListAction" + "?page=1" + "&searchText=" + searchInput.value;
 			}
 		</script>
 	</BODY>
