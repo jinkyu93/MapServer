@@ -88,7 +88,7 @@ function loadContents(contentsCount, callback) {
 	var startLimitNumber = getStartLimitNumber(contentsCount);
 	console.log("startLimitNumber : " + startLimitNumber + ", page : " + page);
 	
-	var sText
+	var sText;
 	if(searchText == undefined){
 		sText ="";
 	}
