@@ -14,7 +14,7 @@ module.exports = function(app, sqlConnection)
 	
 	app.post('/createContentAction', function(request, response){
 		var model = require('../models/CreateContentActionModel.js');	
-		model.render(request, response, sqlConnection);
+		model.action(request, response, sqlConnection);
 	});
 
 }

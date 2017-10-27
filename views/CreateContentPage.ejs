@@ -3,7 +3,7 @@
 		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css">
 		<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.js"></script>
-		<TITLE>CreateNewPostPopup</TITLE>
+		<TITLE>CreateContentPage</TITLE>
 	</HEAD>
 	
 	<BODY>
@@ -42,11 +42,10 @@
 			
 			// --- 부모 페이지(map)에서 필요한 값 가져오기
 			if(window.opener){
-				var id = window.opener.$("#id").val();
+				var id = window.opener.$("#userId").html();
 				var lat = window.opener.$("#lat").val();
 				var lng = window.opener.$("#lng").val();
 			
-
 				form.id.value = id;
 				form.lat.value = lat;
 				form.lng.value = lng;

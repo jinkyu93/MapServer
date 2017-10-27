@@ -38,7 +38,7 @@ module.exports = function(app, sqlConnection)
 			}
 			
 			var model = require('../models/ContentListActionModel.js');
-			model.render(request, response, sqlConnection);
+			model.action(request, response, sqlConnection);
 		}
 		else{
 			response.render('ErrorPage.ejs', {

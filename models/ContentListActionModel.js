@@ -1,13 +1,11 @@
 var async = require("async");
 
-var sqlConnection;
-var request;
-var response;
+
 var page;
 var maxContentsLength;
 var searchText;
 
-exports.render = function(req, res, sqlConn)
+exports.action = function(req, res, sqlConn)
 {
 	sqlConnection = sqlConn;
 	request = req;
@@ -17,14 +15,7 @@ exports.render = function(req, res, sqlConn)
 	searchText = request.session.searchText;
 
 	console.log('/contentListActionModel');				
-<<<<<<< HEAD
-	
-	////////////// ------------- callback -------------- 나는 콜백을 몰라 나는 콜백을 몰라 그래서 코드가 이따구야~
-	loadContentsCount(); 
-}
-=======
 	console.log(searchText);
->>>>>>> noSearchContents
 
 	async.waterfall(
 		[

@@ -23,7 +23,7 @@ module.exports = function(app, sqlConnection)
     app.get('/mapAction', function(request, response){
 		if(request.session.USER){
 			var model = require('../models/MapActionModel.js');
-			model.render(request, response, sqlConnection);	
+			model.action(request, response, sqlConnection);	
 		}
 		else{
 			response.render('ErrorPage.ejs', {

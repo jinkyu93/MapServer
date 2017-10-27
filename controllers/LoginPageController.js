@@ -21,7 +21,7 @@ module.exports = function(app, sqlConnection)
 
 	app.post('/loginAction', function(request, response){
 		var model = require('../models/LoginActionModel.js');	
-		model.render(request, response, sqlConnection);
+		model.action(request, response, sqlConnection);
 	});
 	
 }

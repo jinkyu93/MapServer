@@ -20,7 +20,7 @@ module.exports = function(app, sqlConnection)
 	app.post('/editContentAction', function(request, response){
 		if(request.session.USER){
 			var model = require('../models/EditContentActionModel.js');
-			model.render(request, response, sqlConnection);
+			model.action(request, response, sqlConnection);
 		}
 		else{
 			response.render('ErrorPage.ejs', {
@@ -32,7 +32,7 @@ module.exports = function(app, sqlConnection)
 	app.get('/deleteContentAction', function(request, response){
 		if(request.session.USER){
 			var model = require('../models/DeleteContentActionModel.js');
-			model.render(request, response, sqlConnection, request.query.idx);
+			model.action(request, response, sqlConnection, request.query.idx);
 		}
 		else{
 			response.render('ErrorPage.ejs', {

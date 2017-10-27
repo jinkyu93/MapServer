@@ -24,7 +24,7 @@ module.exports = function(app, sqlConnection)
 	app.get('/contentAction', function(request, response){
 		if(request.session.USER){
 			var model = require('../models/ContentActionModel.js');
-			model.render(request, response, sqlConnection);
+			model.action(request, response, sqlConnection);
 		}
 		else{
 			response.render('ErrorPage.ejs', {

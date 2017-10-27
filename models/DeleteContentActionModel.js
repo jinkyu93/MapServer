@@ -4,7 +4,7 @@ var sqlConnection;
 var request;
 var response;
 
-exports.render = function(req, res, sqlConn, idx)
+exports.action = function(req, res, sqlConn, idx)
 {
 	sqlConnection = sqlConn;
 	request = req;

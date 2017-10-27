@@ -11,23 +11,26 @@
 	
 	<BODY>
 		<div class="ui sidebar vertical menu">
-			<a id="userId" class="item"><%= user.id %></a>
+			<a id="userId" name="userId" class="item"><%= user.id %></a>
 			<a id="logout" class="item" href="./logOutAction">log-out</a>
 			<a class="item" href="./mapPage">map</a>
 			<a class="item" href="./contentListPage">contents</a>
 		</div>
 		<div class="pusher">
-			<a id="show-sidebar">
-				<i class="content icon"></i>
-			</a>  
+			<div class="ui menu">
+				<div class="item" id="show-sidebar">
+					<a class="launch icon item">
+						<i class="content icon"></i>
+					</a>
+				</div> 
+				<div class="right item">
+					<input type="text" id="lat" name="lat"/>
+					<input type="text" id="lng" name="lng"/>
+				</div>
+			</div>
+
 			<div id="map" style="left : 5%; top : 5%; width : 90%; height : 90%;"></div>			
 		</div>
-
-		<form id="popForm">
-			<input type="hidden" id="id" name="id"/>
-			<input type="hidden" id="lat" name="lat"/>
-			<input type="hidden" id="lng" name="lng"/>
-		</form>
 
 		<script type="text/javascript">
 			$('#show-sidebar').click(function(){
@@ -77,7 +80,9 @@
 				marker.bindPopup(popupContent[0]);
 			}
 			
-			
+			var inputLat = document.getElementById("lat");
+			var inputLng = document.getElementById("lng");
+
 			function onMapClick(e){
 				var lat = e.latlng.lat;
 				var lng = e.latlng.lng;
@@ -87,13 +92,8 @@
 					return;
 				}
 
-				var form = document.getElementById("popForm");
-				var userId = document.getElementById("userId");
-				var logout = document.getElementById("logout");
-
-				form.id.value = userId.innerHTML;
-				form.lat.value = e.latlng.lat;
-				form.lng.value = e.latlng.lng;
+				inputLat.value = lat;
+				inputLng.value = lng;
 
 				var url="createContentPage";
 				var popupWindow = window.open(url,"CreateNewPost","width=600, height=600");
@@ -103,8 +103,22 @@
 				//popup.document.getElementById("lat").value = e.latlng.lat;
 				//popup.document.getElementById("lng").value = e.latlng.lng;
 			}
-			map.on('click', onMapClick);
 
+			function onMouseMove(e){
+				var lat = e.latlng.lat;
+				var lng = e.latlng.lng;
+
+				if( lat > 85 || lat < -85 || lng > 180 || lng < -180 ){
+					return;
+				}
+
+				inputLat.value = e.latlng.lat;
+				inputLng.value = e.latlng.lng;
+			}
+
+			map.on('click', onMapClick);
+			map.on('mousemove', onMouseMove);
+			
 		</script>
 	</BODY>
 </HTML>
