@@ -1,72 +1,127 @@
+var async = require("async");
+
 var sqlConnection;
 var request;
 var response;
 var page;
 var maxContentsLength;
+var searchText;
 
 exports.render = function(req, res, sqlConn)
 {
 	sqlConnection = sqlConn;
 	request = req;
 	response = res;
-	maxContentsLength = 2;
+	maxContentsLength = 5;
 	page = request.query.page - 1;
+	searchText = request.session.searchText;
 
 	console.log('/contentListActionModel');				
+<<<<<<< HEAD
 	
 	////////////// ------------- callback -------------- 나는 콜백을 몰라 나는 콜백을 몰라 그래서 코드가 이따구야~
 	loadContentsCount(); 
 }
+=======
+	console.log(searchText);
+>>>>>>> noSearchContents
 
-function loadContentsCount() {
-	var countQuary = "select count(*) as count from contents";
+	async.waterfall(
+		[
+			function(callback){
+				loadContentsCount(callback);
+			},
+			function(count, callback){
+				loadContents(count, callback);
+			},
+			function(err){
+				if(err) console.log(err);
+			}
+		]
+	);
+}
+
+function loadContentsCount(callback) {
+	var countQuary;
+
+	if(searchText == undefined){
+		countQuary = 'select * from counts where what_count="contents_count"';
+	}
+	else{
+		countQuary = 'select count(*) as count from contents where title like "%' + searchText + '%"';
+	}
 
 	sqlConnection.query(countQuary, (err, rows) => {
-		loadContestsCountAction(err, rows);
+		// ----- 이부분을 함수로 추출하면 비동기로 코드가 동작해서 contentCount가 반환이 안됨
+		if(err) {
+			request.session.ERRORMESSAGE = "load contents count error";
+			response.redirect('/errorPage');
+			callback(null);
+			return;
+		}
+		var contentsCount = rows[0].count;
+		console.log("loadContentsCount : " + contentsCount);
+		if(contentsCount == 0){
+			request.session.ERRORMESSAGE = "there is no contents";
+			response.redirect('/errorPage');
+			return;
+		}
+	
+		callback(null, contentsCount);
 	});
 }
 
-function loadContestsCountAction(err, rows){
-	if(err) return;
-
-	console.log("count : " + rows[0].count);
-	
-	loadContents(rows[0].count);
-}
-
-function loadContents(contentsCount) {
-	var pageRange = (contentsCount / maxContentsLength);
+function getStartLimitNumber(contentsCount){
+	var pageRange = parseInt(contentsCount / maxContentsLength);
 	if(contentsCount % maxContentsLength != 0){
 		pageRange = pageRange + 1;
 	}
 
-	if(request.query.page > pageRange){
-		console.log("page : " + page + ", pageRange : " + pageRange);
-				
-		request.session.ERRORMESSAGE = "out of page range";
-		response.redirect('/errorPage');
-		return;
+	request.session.PAGERANGE = pageRange;
+		
+	if(request.query.page < 1){				
+		request.query.page = 1;
+		page = request.query.page - 1;
+	}
+	else if(request.query.page > pageRange){
+		request.query.page = pageRange;
+		page = request.query.page - 1;
 	}
 
-	var startLimitNumber = maxContentsLength * page;
-	console.log("maxContentsLength : " + maxContentsLength + ", page : " + page);
+	return (maxContentsLength * page);
+}
+
+function loadContents(contentsCount, callback) {
+	var startLimitNumber = getStartLimitNumber(contentsCount);
+	console.log("startLimitNumber : " + startLimitNumber + ", page : " + page);
 	
+	var sText;
+	if(searchText == undefined){
+		sText ="";
+	}
+	else{
+		sText = searchText;
+	}
+
 	var selectQuary = "select " + 
 	"content_idx, user_id, title, lat, lng, datetime " +
 	"from contents " + 
+	"where title like " + '"%' + sText + '%" ' +
 	"order by datetime desc " + 
 	"limit " + startLimitNumber + "," + maxContentsLength;
 
-	console.log(selectQuary);
 	sqlConnection.query(selectQuary, (err, rows) => {
-		loadContentsAction(err, rows);
+		loadContentsAction(err, rows, callback);
 	});
-
 }
 
-function loadContentsAction(err, rows){
-	if(err) return;
-	
+function loadContentsAction(err, rows, callback) {
+	if(err) {
+		request.session.ERRORMESSAGE = "load contents error";
+		response.redirect('/errorPage');
+		return;
+	}
+	console.log("rows.length : " + rows.length);
 	/*
 	for(var i = 0; i < rows.length; i++){
 		console.log("");
@@ -81,10 +136,7 @@ function loadContentsAction(err, rows){
 	*/
 
 	request.session.CONTENTS = rows;
-	
-	response.redirect('/contentListPage' + '?page=' + request.query.page);	
-}
 
-function callback(err){
-	if(err) throw new Error(err);
+	response.redirect('/contentListPage' + '?page=' + request.query.page);
+	callback(null);			
 }

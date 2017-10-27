@@ -1,6 +1,7 @@
 var sqlConnection;
 var request;
 var response;
+
 exports.render = function(req, res, sqlConn)
 {
 	sqlConnection = sqlConn;
@@ -40,7 +41,11 @@ function onLogin(id, pw){
 }
 
 function loginAction(err, rows, id, pw){
-	if(err) throw new Error(err);
+	if(err) {
+		request.session.ERRORMESSAGE = "login error";
+		response.redirect('/errorPage');
+		return;
+	}	
 	if(rows.length){
 		console.log('id : ' + id + ' pw : ' + pw + ' success');
 		var user = {id : id, pw : pw};		

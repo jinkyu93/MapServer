@@ -6,7 +6,7 @@
 	
 		<link href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" rel="stylesheet">
 		<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
-		<TITLE>MapPage</TITLE>
+		<TITLE>ContentListPage</TITLE>
 	</HEAD>
 	
 	<BODY>
@@ -21,57 +21,92 @@
 				<i class="content icon"></i>
 			</a>  
 			<div id="contentList">
-				<table class="ui celled table">
-					<thead>
-						<tr>
-							<th width="10%">idx</th>
-							<th width="30%">Title</th>
-							<th width="20%">UserID</th>
-							<th width="10%">Lat</th>
-							<th width="10%">Lng</th>
-							<th width="20%">Date</th>
-						</tr>
-					</thead>
-					<tbody>
-						<% if(contents.length > 0) { %>
-							<% for(var i = 0; i < contents.length; i++) { %>
-								<tr>
-									<td> <%= contents[i].content_idx %> </td>										
-									<td> <%= contents[i].title %> </td>
-									<td> <%= contents[i].user_id %> </td>
-									<td> <%= (contents[i].lat).toFixed(3) %> </td>
-									<td> <%= (contents[i].lng).toFixed(3) %> </td>
-									<td> 
-										<% var datetime = new Date(contents[i].datetime); %> 
-										<% var date = 
-											datetime.getFullYear() + "-" + 
-											datetime.getMonth() + "-" + 
-											datetime.getDate(); %>
-										<%= date %> 
-									</td>
-								</tr>
-							<% } %>
-						<% } %>
-					</tbody>
-					<tfoot>
-						<tr>
-							<th colspan="6">
-								<div class="ui right floated pagination menu">
-									<a class="icon item">
-										<i class="left chevron icon"></i>
-									</a>
-									<a class="item">1</a>
-									<a class="item">2</a>
-									<a class="item">3</a>
-									<a class="item">4</a>
-									<a class="icon item">
-										<i class="right chevron icon"></i>
-									</a>
-								</div>
-							</th>
-						</tr>
-					</tfoot>
-				</table>
+				<div class="ui segment" style="left : 5%; top : 5%; width : 90%; height : 90%;">
+					<div class="ui form">	
+						<div class="field">
+							<table class="ui celled table">
+								<thead>
+									<tr>
+										<th width="10%">idx</th>
+										<th width="30%">Title</th>
+										<th width="20%">UserID</th>
+										<th width="10%">Lat</th>
+										<th width="10%">Lng</th>
+										<th width="20%">Date</th>
+									</tr>
+								</thead>
+								<tbody>
+									<% if(contents.length > 0) { %>
+										<% for(var i = 0; i < contents.length; i++) { %>
+											<tr onclick="onContentClick(this)" onmouseover="onContentMouseOver(this)" onmouseout="onContentMouseOut(this)">
+												<td> <%= contents[i].content_idx %> </td>										
+												<td> <%= contents[i].title %> </td>
+												<td> <%= contents[i].user_id %> </td>
+												<td> <%= (contents[i].lat).toFixed(3) %> </td>
+												<td> <%= (contents[i].lng).toFixed(3) %> </td>
+												<td> 
+													<% var datetime = new Date(contents[i].datetime); %> 
+													<% var date = 
+														datetime.getFullYear() + "-" + 
+														(datetime.getMonth()*1 + 1) + "-" + 
+														datetime.getDate(); %>
+													<%= date %> 
+												</td>
+											</tr>
+										<% } %>
+									<% } %>
+								</tbody>
+								<tfoot>
+									<tr>
+										<th colspan="6">
+											<div class="ui left floated pagination menu">
+												<a class="item" href="/createContentPage">CREATE</a>
+											</div>
+											<div class="ui floated pagination menu">
+												<input id="search" type="text" placeholder="search with title">
+												<a class="item" onclick="onSearchClick()">SEARCH</a>	
+											</div>	
+											<div class="ui right floated pagination menu">
+												<a class="icon item" href="/contentListPage?page=1">
+													<i class="double left angle icon"></i>
+												</a>
+												<a class="icon item" href="/contentListPage?page=<%= page-1 %>">
+													<i class="left angle icon"></i>
+												</a>
+												<!-- active된 페이지가 중앙에 올 수 있도록 변경하기 -->
+												
+												<% if(parseInt(pageRange/5) > parseInt((page-1)/5)) { %>
+													<% for(var i = 1 + parseInt((page-1)/5)*5; i < 6 + parseInt((page-1)/5)*5; i++) { %>
+														<% if(i == page) { %>
+															<a class="active item"> <%= i %> </a>
+														<% } else { %>
+															<a class="item" href="/contentListPage?page=<%= i %>"> <%= i %> </a>
+														<% } %>
+													<% } %>
+												<% } else { %>
+													<% for(var i = 1 + parseInt((page-1)/5)*5; i < pageRange + 1; i++) { %>
+														<% if(i == page) { %>
+															<a class="active item"> <%= i %> </a>
+														<% } else { %>
+															<a class="item" href="/contentListPage?page=<%= i %>"> <%= i %> </a>
+														<% } %>
+													<% } %>
+												<% } %>
+												<% var nextPage = page*1 + 1 %>
+												<a class="icon item" href="/contentListPage?page=<%= nextPage %>">
+													<i class="right angle icon"></i>
+												</a>
+												<a class="icon item" href="/contentListPage?page=<%= pageRange %>">
+													<i class="double right angle icon"></i>
+												</a>
+											</div>
+										</th>
+									</tr>
+								</tfoot>
+							</table>
+						</div>
+					</div>
+				</div>
 			</div>			
 		</div>
 
@@ -88,24 +123,24 @@
 				$('.ui.sidebar').sidebar('toggle');
 			});
 			
-			/*
-
-			//alert(rows.length);
-			
-			for(var i = 0; i < rows.length; i++){
-				var content_idx = rows[i].content_idx;
-				var user_id = rows[i].user_id;
-				var title = rows[i].title;
-				var content = rows[i].content;
-				var lat = rows[i].lat;
-				var lng = rows[i].lng;
-				var datetime = new Date(rows[i].datetime);
-				var date = datetime.getFullYear() + "-" + datetime.getMonth() + "-" + datetime.getDate();
-
-
+			function onContentClick(trObj){
+				var idx = trObj.cells[0].innerText;
+				location.href = "/contentPage" + "?idx=" + idx;
 			}
-			*/
 
+			function onContentMouseOver(trObj){
+				trObj.bgColor = "lightgray";
+			}
+
+			function onContentMouseOut(trObj){
+				trObj.bgColor = "white";
+			}
+			
+			function onSearchClick(){
+				var searchInput = document.getElementById("search");
+				//alert(searchInput.value);
+				location.href="/contentListAction" + "?page=1" + "&searchText=" + searchInput.value;
+			}
 		</script>
 	</BODY>
 </HTML>

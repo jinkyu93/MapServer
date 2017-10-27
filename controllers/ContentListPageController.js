@@ -8,26 +8,35 @@ module.exports = function(app, sqlConnection)
 		}
 		else if(request.session.CONTENTS){
             if(request.query.page == undefined){
-                request.query.page = '1';
+				request.query.page = '1';
+				delete request.session.searchText;
             }
 			var rows = request.session.CONTENTS;
 			delete request.session.CONTENTS;
 			
 			response.render('ContentListPage.ejs', {
 				user : request.session.USER,
-				contents : rows
+				contents : rows,
+				page : request.query.page,
+				pageRange : request.session.PAGERANGE
 			});
 			console.log('/contentListPage');
 		}
 		else{
             if(request.query.page == undefined){
-                request.query.page = '1';
+				request.query.page = '1';
+				delete request.session.searchText;				
             }
 			response.redirect('/contentListAction' + '?page=' + request.query.page);
 		}
 	});
+	
 	app.get('/contentListAction', function(request, response){
 		if(request.session.USER){
+			if(request.query.searchText != undefined){
+				request.session.searchText = request.query.searchText;				
+			}
+			
 			var model = require('../models/ContentListActionModel.js');
 			model.render(request, response, sqlConnection);
 		}

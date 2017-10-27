@@ -12,7 +12,7 @@
 	<BODY>
 		<div class="ui sidebar vertical menu">
 			<a id="userId" class="item"><%= user.id %></a>
-			<a class="item" href="./logOutAction">log-out</a>
+			<a id="logout" class="item" href="./logOutAction">log-out</a>
 			<a class="item" href="./mapPage">map</a>
 			<a class="item" href="./contentListPage">contents</a>
 		</div>
@@ -38,8 +38,8 @@
 			var map = L.map('map').setView([36.5, 127.5], 7);
 
 			// 범위 지정 -- 안하면 지도가 반복적으로 나오지만 지도마다 좌표가 다르다
-			var boundStart = L.latLng(-90, -180);
-			var boundEnd = L.latLng(90, 180);
+			var boundStart = L.latLng(-85, -180);
+			var boundEnd = L.latLng(85, 180);
 			var myBounds = L.latLngBounds(boundStart, boundEnd);
 			
 			map.setMaxBounds(myBounds);
@@ -60,8 +60,10 @@
 				var lat = rows[i].lat;
 				var lng = rows[i].lng;
 				var datetime = new Date(rows[i].datetime);
-				var date = datetime.getFullYear() + "-" + datetime.getMonth() + "-" + datetime.getDate();
+				// getMonth는 0~11 의 값을 가져오기 때문에 + 1
+				var date = datetime.getFullYear() + "-" + (datetime.getMonth()*1 + 1) + "-" + datetime.getDate();
 				
+
 				/*
 				var c = L.DomUtil.create('button', 'content');
 				var popupContent = L.popup().setContent(title + " " + user_id + " " + date);
@@ -69,7 +71,7 @@
 					alert('aaaa');
 				}, c);
 				*/
-				var popupContent = $("<div>").html('<a href="./logoutAction">' + title + '</a><br>' + " " + user_id + " " + date);
+				var popupContent = $("<div>").html('<a href="./contentPage' + '?idx=' + content_idx + '">' + title + '</a><br>' + " " + user_id + " " + date);
 				//var popupContent = L.popup().setContent(title + " " + user_id + " " + date);
 				var marker = L.marker(L.latLng(lat, lng)).addTo(map);
 				marker.bindPopup(popupContent[0]);
@@ -77,15 +79,24 @@
 			
 			
 			function onMapClick(e){
+				var lat = e.latlng.lat;
+				var lng = e.latlng.lng;
+				
+				if( lat > 85 || lat < -85 || lng > 180 || lng < -180 ){
+					alert("out of map");
+					return;
+				}
+
 				var form = document.getElementById("popForm");
 				var userId = document.getElementById("userId");
+				var logout = document.getElementById("logout");
 
-				form.id.value = userId.innerText;
+				form.id.value = userId.innerHTML;
 				form.lat.value = e.latlng.lat;
 				form.lng.value = e.latlng.lng;
 
-				var url="createNewPostPopup";
-				var popupWindow = window.open(url,"CreateNewPost","width=400, height=400");
+				var url="createContentPage";
+				var popupWindow = window.open(url,"CreateNewPost","width=600, height=600");
 
 				// --- 부모에서 자식팝업으로 데이터를 보낼 경우 가지 않는 경우가 가끔 발생
 				//popup.document.getElementById("id").value = userId.innerText;
