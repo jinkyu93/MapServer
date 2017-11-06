@@ -15,13 +15,8 @@ exports.action = function(req, res, sqlConn, idx)
 }
 
 function deleteContent(idx) {
-	var moveQuary = "insert into deleted_contents select * from contents where content_idx=" + idx + ";"
-	var deleteQuary = "delete from contents where content_idx=" + '\'' + idx + '\'' + ";";
-	var updateContentsCountQuary = 'update counts set count=count-1 where what_count="contents_count";';
-	var updateDeletedCountQuary = 'update counts set count=count+1 where what_count="deleted_count";';
+	var sqlQuary = "delete from contents where content_idx=" + '\'' + idx + '\'' + ";";
 	
-	var sqlQuary = moveQuary + deleteQuary + updateContentsCountQuary + updateDeletedCountQuary;
-
 	sqlConnection.query(sqlQuary, (err, result) => {
 		deleteContentAction(err, result);
 	});

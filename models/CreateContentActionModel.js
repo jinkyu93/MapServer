@@ -11,24 +11,10 @@ exports.action = function(req, res, sqlConn)
 	response = res;
 	console.log("/createContentAction");
 
-	async.waterfall(
-		[
-			function(callback){
-				createContent(callback);
-			},
-			function(isSuccess, callback){
-				if(isSuccess){
-					updateContentCount(callback);					
-				}
-			},
-			function(err){
-				if(err) console.log(err);
-			}
-		]
-	);
+	createContent();
 }
 
-function createContent(callback) {
+function createContent() {
 	var sqlQuary = "insert into contents(user_id, title, content, lat, lng, datetime) values ?";
 
 	var id = request.body.id;
@@ -47,11 +33,11 @@ function createContent(callback) {
 	var values = [ [id, title, content, lat, lng, datetime] ];
 
 	sqlConnection.query(sqlQuary, [values], (err, result) => {
-		createContentAction(err, result, callback);
+		createContentAction(err, result);
 	});
 }
 
-function createContentAction(err, result, callback){
+function createContentAction(err, result){
 	if(err) {
 		request.session.ERRORMESSAGE = "create content error";
 		response.redirect('/errorPage');
@@ -59,7 +45,7 @@ function createContentAction(err, result, callback){
 	}
 	if(result.affectedRows){
 		console.log("insert success");
-		callback(null, true);
+		response.redirect('/closePopup');			
 	}
 }
 
@@ -82,5 +68,4 @@ function updateContentCountAction(err, result, callback){
 		callback(null);
 	}
 
-	response.redirect('/closePopup');	
 }

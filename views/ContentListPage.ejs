@@ -71,51 +71,8 @@
 												<input id="search" type="text" placeholder="search with title">
 												<a class="item" onclick="onSearchClick()">SEARCH</a>	
 											</div>	
-											<div class="ui right floated pagination menu">
-												<a class="icon item" href="/contentListPage?page=1">
-													<i class="double left angle icon"></i>
-												</a>
-												<a class="icon item" href="/contentListPage?page=<%= page-1 %>">
-													<i class="left angle icon"></i>
-												</a>
-												<!-- active된 페이지가 중앙에 올 수 있도록 변경하기 -->
-												
-												<!-- active된 페이지가 중앙에 올 수 있도록 -->
-												
-												<% if(page*1 < 3) { %>
-													<% for(var i = 1; i < 6; i++) { %>
-														<% if(i == page) { %>
-															<a class="active item"> <%= i %> </a>
-														<% } else { %>
-															<a class="item" href="/contentListPage?page=<%= i %>"> <%= i %> </a>
-														<% } %>
-													<% } %>
-												<% } else if(page*1 > pageRange*1 - 2){ %>
-													<% for(var i = pageRange*1 - 4; i < pageRange + 1; i++) { %>
-														<% if(i == page) { %>
-															<a class="active item"> <%= i %> </a>
-														<% } else { %>
-															<a class="item" href="/contentListPage?page=<%= i %>"> <%= i %> </a>
-														<% } %>
-													<% } %>
-												<% } else{ %>
-													<% for(var i = page*1 - 2; i < page*1 + 3; i++) { %>
-														<% if(i == page) { %>
-															<a class="active item"> <%= i %> </a>
-														<% } else { %>
-															<a class="item" href="/contentListPage?page=<%= i %>"> <%= i %> </a>
-														<% } %>
-													<% } %>
-												<% } %>
-
-												<% var nextPage = page*1 + 1 %>
-												<a class="icon item" href="/contentListPage?page=<%= nextPage %>">
-													<i class="right angle icon"></i>
-												</a>
-												<a class="icon item" href="/contentListPage?page=<%= pageRange %>">
-													<i class="double right angle icon"> ... <%= pageRange %></i>
-												</a>
-											</div>
+											
+											<% include ./MakePagingMenu.ejs %>
 										</th>
 									</tr>
 								</tfoot>
